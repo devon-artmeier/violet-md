@@ -4,6 +4,8 @@ MEMORY {
 
 SECTIONS {
 	code: {
+		*(init);
+		. = ALIGN(2);
 		*(code);
 		. = ALIGN(2);
 		*(data);

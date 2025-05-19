@@ -19,13 +19,11 @@
 	section code
 
 ; ------------------------------------------------------------------------------
-; Main
+; V-BLANK interrupt
 ; ------------------------------------------------------------------------------
 
-	xdef XREF_Main
-XREF_Main:
-	vdpCmd move.l,0,CRAM,WRITE,VDP_CTRL
-	move.w	#$E0,VDP_DATA
-	bra.w	*
+	xdef VioletMdVBlank
+VioletMdVBlank:
+	rte
 
 ; ------------------------------------------------------------------------------

@@ -6,9 +6,7 @@ SECTIONS {
 	code: {
 		*(header);
 		. = ALIGN(2);
-		*(init);
-		. = ALIGN(2);
-		*(engine);
+		*(violet);
 		. = ALIGN(2);
 		*(code);
 		. = ALIGN(2);

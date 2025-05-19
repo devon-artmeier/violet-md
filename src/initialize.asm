@@ -22,8 +22,8 @@
 ; Hard reset
 ; ------------------------------------------------------------------------------
 
-	xdef HardReset
-HardReset:
+	xdef VioletMdReset
+VioletMdReset:
 	move	#$2700,sr					; Disable interrupts
 
 	lea	.Addresses(pc),a0				; Get addresses
@@ -144,7 +144,7 @@ HardReset:
 
 .ChecksumGood:
 	movem.l	(a6),d0-a6					; Clear registers
-	jmp	Main						; Go to main
+	bra.w	XREF_Main					; Go to main
 
 ; ------------------------------------------------------------------------------
 ; Addresses

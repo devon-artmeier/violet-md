@@ -23,7 +23,7 @@
 ; ------------------------------------------------------------------------------
 
 	dc.l	stack						; Stack pointer
-	dc.l	HardReset					; Entry point
+	dc.l	VioletMdReset					; Entry point
 	dc.l	BusError					; Bus error
 	dc.l	AddressError					; Address error
 	dc.l	IllegalInstr					; Illegal instruction
@@ -41,9 +41,9 @@
 	dc.l	ErrorExcept					; IRQ level 1
 	dc.l	ErrorExcept					; External interrupt
 	dc.l	ErrorExcept					; IRQ level 3
-	dc.l	HBlankIrq					; H-BLANK interrupt
+	dc.l	ErrorExcept					; H-BLANK interrupt
 	dc.l	ErrorExcept					; IRQ level 5
-	dc.l	VBlankIrq					; V-BLANK interrupt
+	dc.l	VioletMdVBlank					; V-BLANK interrupt
 	dc.l	ErrorExcept					; IRQ level 7
 
 	dc.l	ErrorExcept					; TRAP #00 exception
