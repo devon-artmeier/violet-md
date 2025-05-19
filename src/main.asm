@@ -17,34 +17,6 @@
 	include	"shared.inc"
 	
 	section code
-
-; ------------------------------------------------------------------------------
-; Get scene events
-; ------------------------------------------------------------------------------
-; PARAMETERS:
-;	d0.w - Scene event type
-;	       $00 - Enter
-;	       $04 - Exit
-;	       $08 - Update start
-;	       $0C - Update end
-;	       $10 - Draw start
-;	       $14 - Draw end
-;	       $18 - V-BLANK interrupt start
-;	       $1C - V-BLANK interrupt end
-;	       $20 - V-BLANK interrupt lag
-; ------------------------------------------------------------------------------
-; RETURNS:
-;	eq/ne - Not defined/Defined
-;	a0.l  - Scene event address
-; ------------------------------------------------------------------------------
-
-	xdef XREF_GetSceneEvent
-XREF_GetSceneEvent:
-	lea	XREF_Scenes(pc),a0				; Get event address
-	adda.w	scene,a0
-	movea.l	(a0,d0.w),a0
-	cmpa.w	#0,a0						; Check if it's defined
-	rts
 	
 ; ------------------------------------------------------------------------------
 ; Set scene
@@ -69,6 +41,35 @@ SetScene:
 	rts
 
 ; ------------------------------------------------------------------------------
+; Run scene event
+; ------------------------------------------------------------------------------
+; PARAMETERS:
+;	d0.w - Scene event type
+;	       $00 - Enter
+;	       $04 - Exit
+;	       $08 - Update start
+;	       $0C - Update end
+;	       $10 - Draw start
+;	       $14 - Draw end
+;	       $18 - V-BLANK interrupt start
+;	       $1C - V-BLANK interrupt end
+;	       $20 - V-BLANK interrupt lag
+; ------------------------------------------------------------------------------
+
+	xdef XREF_RunSceneEvent
+XREF_RunSceneEvent:
+	lea	XREF_Scenes(pc),a0				; Get event address
+	adda.w	scene,a0
+	move.l	(a0,d0.w),d0
+	beq.s	.End						; If it's not defined, branch
+	
+	movea.l	d0,a0						; Run event
+	jmp	(a0)
+	
+.End:
+	rts
+
+; ------------------------------------------------------------------------------
 ; Main
 ; ------------------------------------------------------------------------------
 
@@ -79,52 +80,35 @@ Main:
 	beq.s	UpdateScene					; If not, branch
 	
 	moveq	#4,d0						; Run scene exit event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	.NoExitEvent
-	jsr	(a0)
-
-.NoExitEvent:
+	bsr.s	XREF_RunSceneEvent
+	
 	move.w	next_scene,scene				; Update scene ID
 
 XREF_MainStart:
 	moveq	#0,d0						; Run scene enter event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	UpdateScene
-	jsr	(a0)
+	bsr.s	XREF_RunSceneEvent
 
 UpdateScene:
 	bsr.w	VioletMdVSync					; VSync
 
 	moveq	#8,d0						; Run scene update start event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	.NoUpdateStartEvent
-	jsr	(a0)
-
-.NoUpdateStartEvent:
+	bsr.s	XREF_RunSceneEvent
+	
 	; TODO: Do updates here
 
 	moveq	#$C,d0						; Run scene update end event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	.NoUpdateEndEvent
-	jsr	(a0)
-
-.NoUpdateEndEvent:
+	bsr.s	XREF_RunSceneEvent
+	
 	; TODO: Initialize drawing here
 
 	moveq	#$10,d0						; Run scene draw start event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	.NoDrawStartEvent
-	jsr	(a0)
+	bsr.s	XREF_RunSceneEvent
 	
-.NoDrawStartEvent:
 	; TODO: Do drawing here
 
 	moveq	#$14,d0						; Run scene draw end event
-	bsr.s	XREF_GetSceneEvent
-	beq.s	.NoDrawEndEvent
-	jsr	(a0)
+	bsr.s	XREF_RunSceneEvent
 	
-.NoDrawEndEvent:
 	; TODO: Finish drawing here
 	
 	bra.s	Main						; Loop

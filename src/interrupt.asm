@@ -31,31 +31,22 @@ VioletMdVBlank:
 	clr.b	vsync_flag					; Clear VSync flag
 
 	moveq	#$18,d0						; Run scene V-BLANK interrupt start event
-	bsr.w	XREF_GetSceneEvent
-	beq.s	.NoStartEvent
-	jsr	(a0)
-
-.NoStartEvent:
+	bsr.w	XREF_RunSceneEvent
+	
 	move	#$2700,sr					; Disable interrupts
 	; TODO: Do updates here
 	move	#$2000,sr					; Enable interrupts
 
 	moveq	#$1C,d0						; Run scene V-BLANK interrupt end event
-	bsr.w	XREF_GetSceneEvent
-	beq.s	.NoEndEvent
-	jsr	(a0)
-
-.NoEndEvent:
+	bsr.w	XREF_RunSceneEvent
+	
 	movem.l	(sp)+,d0-a6					; Restore registers
 	rte
 
 .Lag:
 	moveq	#$20,d0						; Run scene V-BLANK interrupt lag event
-	bsr.w	XREF_GetSceneEvent
-	beq.s	.NoLagEvent
-	jsr	(a0)
-
-.NoLagEvent:
+	bsr.w	XREF_RunSceneEvent
+	
 	movem.l	(sp)+,d0-a6					; Restore registers
 	rte
 	
