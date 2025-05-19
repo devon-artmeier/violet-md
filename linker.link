@@ -1,0 +1,12 @@
+MEMORY {
+	prg: org=0, len=0x8000
+}
+
+SECTIONS {
+	code: {
+		*(code);
+		. = ALIGN(2);
+		*(data);
+		. = ALIGN(2);
+	} > prg
+}
