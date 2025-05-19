@@ -22,7 +22,7 @@
 ; Vector table
 ; ------------------------------------------------------------------------------
 
-	dc.l	stack						; Stack pointer
+	dc.l	0						; Stack pointer
 	dc.l	VioletMdReset					; Entry point
 	dc.l	BusError					; Bus error
 	dc.l	AddressError					; Address error

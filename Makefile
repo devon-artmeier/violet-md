@@ -21,7 +21,7 @@ BUILD_PATH           := $(OUT_PATH)/build
 SRC                  := $(wildcard $(SRC_PATH)/*.asm)
 OBJ                  := $(patsubst $(SRC_PATH)/%.asm,$(BUILD_PATH)/%.o,$(SRC))
 DEPEND               := $(patsubst %.o,%.d,$(OBJ))
-OUT                  := $(OUT_PATH)/violet_md.bin
+OUT                  := $(OUT_PATH)/violetmd.bin
 SYM                  := $(patsubst $(OUT_PATH)/%.bin,$(BUILD_PATH)/%.sym,$(OUT))
 EXPORT               := $(patsubst %.bin,%.inc,$(OUT))
 

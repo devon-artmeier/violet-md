@@ -24,6 +24,16 @@
 
 	xdef VioletMd
 VioletMd:
-	incbin	"violet_md.bin"
+	incbin	"violetmd.bin"
 
+; ------------------------------------------------------------------------------
+; Scene index
+; ------------------------------------------------------------------------------
+
+	; Test
+	dc.l	TestEnter, TestExit
+	dc.l	TestUpdateStart, TestUpdateEnd
+	dc.l	TestDrawStart, TestDrawEnd
+	dc.l	TestVBlankStart, TestVBlankEnd, TestVBlankLag
+	
 ; ------------------------------------------------------------------------------

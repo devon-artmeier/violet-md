@@ -14,6 +14,18 @@
 ; PERFORMANCE OF THIS SOFTWARE.
 ; ------------------------------------------------------------------------------
 
+; ------------------------------------------------------------------------------
+; Memory map and variables
+; ------------------------------------------------------------------------------
 
+	rsset WORK_RAM+$E000
+
+scene			rs.w 1					; Current scene
+next_scene		rs.w 1					; Next scene
+
+vsync_flag		rs.b 1					; VSync flag
+
+			rs.b (WORK_RAM_END-$1FF)-__RS		; Stack space
+stack			rs.b 0					; Stack base
 
 ; ------------------------------------------------------------------------------

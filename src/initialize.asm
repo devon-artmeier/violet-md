@@ -19,7 +19,7 @@
 	section init
 
 ; ------------------------------------------------------------------------------
-; Hard reset
+; Reset
 ; ------------------------------------------------------------------------------
 
 	xdef VioletMdReset
@@ -144,7 +144,7 @@ VioletMdReset:
 
 .ChecksumGood:
 	movem.l	(a6),d0-a6					; Clear registers
-	bra.w	XREF_Main					; Go to main
+	bra.w	XREF_MainStart					; Go to main
 
 ; ------------------------------------------------------------------------------
 ; Addresses

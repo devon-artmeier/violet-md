@@ -10,5 +10,6 @@ SECTIONS {
 		. = ALIGN(2);
 		*(data);
 		. = ALIGN(2);
+		XREF_Scenes = .;
 	} > prg
 }
