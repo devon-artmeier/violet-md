@@ -37,7 +37,7 @@ VioletMdVBlank:
 
 .NoStartEvent:
 	move	#$2700,sr					; Disable interrupts
-	; TODO: Do V-BLANK interrupts here
+	; TODO: Do updates here
 	move	#$2000,sr					; Enable interrupts
 
 	moveq	#$1C,d0						; Run scene V-BLANK interrupt end event
