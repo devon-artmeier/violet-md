@@ -2,7 +2,7 @@
 # Common
 # ------------------------------------------------------------------------------
 
-include common.mk
+include ../common.mk
 
 # ------------------------------------------------------------------------------
 # Paths
@@ -11,7 +11,8 @@ include common.mk
 OUT_PATH             := out
 OUT_PATH_EXISTS      := $(wildcard $(OUT_PATH))
 SRC_PATH             := src
-INCLUDE_PATH         := include
+INCLUDE_PATH         := ../include
+VIOLET_PATH          := ../out
 BUILD_PATH           := $(OUT_PATH)/build
 
 # ------------------------------------------------------------------------------
@@ -21,30 +22,27 @@ BUILD_PATH           := $(OUT_PATH)/build
 SRC                  := $(wildcard $(SRC_PATH)/*.asm)
 OBJ                  := $(patsubst $(SRC_PATH)/%.asm,$(BUILD_PATH)/%.o,$(SRC))
 DEPEND               := $(patsubst %.o,%.d,$(OBJ))
-OUT                  := $(OUT_PATH)/violet.bin
-SYM                  := $(patsubst $(OUT_PATH)/%.bin,$(BUILD_PATH)/%.sym,$(OUT))
-EXPORT               := $(patsubst %.bin,%.inc,$(OUT))
+OUT                  := $(OUT_PATH)/violet_test.gen
 
 # ------------------------------------------------------------------------------
 # Tool flags
 # ------------------------------------------------------------------------------
 
-VASM_FLAGS           := $(VASM_FLAGS) -I$(INCLUDE_PATH)
-VLINK_FLAGS          := $(VLINK_FLAGS) -symctrl=4 -T linker.link -symfile $(SYM)
-MKASMDEP_FLAGS       := $(MKASMDEP_FLAGS) -i $(INCLUDE_PATH)
-DUMPASMSYM_FLAGS     := $(DUMPASMSYM_FLAGS) -f VioletMd -xp XREF_
+VASM_FLAGS           := $(VASM_FLAGS) -I$(INCLUDE_PATH) -I$(VIOLET_PATH)
+VLINK_FLAGS          := $(VLINK_FLAGS) -T linker.link
+MKASMDEP_FLAGS       := $(MKASMDEP_FLAGS) -i $(INCLUDE_PATH) -i $(VIOLET_PATH)
 
 # ------------------------------------------------------------------------------
 # Reserved rules
 # ------------------------------------------------------------------------------
 
-.PHONY: all clean
+.PHONY: all clean violet
 
 # ------------------------------------------------------------------------------
 # Make all
 # ------------------------------------------------------------------------------
 
-all: $(OUT) $(EXPORT)
+all: violet $(OUT)
 
 # ------------------------------------------------------------------------------
 # Clean
@@ -59,13 +57,10 @@ endif
 # Rules
 # ------------------------------------------------------------------------------
 
-$(EXPORT): $(SYM) | $(OUT_PATH) $(OUT)
-	$(EXPORT_MSG)
-	@$(DUMPASMSYM) $(DUMPASMSYM_FLAGS) -o $@ $^
-	
 $(OUT): $(OBJ) | $(OUT_PATH)
 	$(LINK_MSG)
 	@$(VLINK) $(VLINK_FLAGS) -o $@ $^
+	@$(MDROMFIX) $(MDROMFIX_FLAGS) $@
 
 $(OBJ): $(BUILD_PATH)/%.o: $(SRC_PATH)/%.asm | $(BUILD_PATH) $(DEPEND)
 	$(ASSEMBLE_MSG)
@@ -74,6 +69,9 @@ $(OBJ): $(BUILD_PATH)/%.o: $(SRC_PATH)/%.asm | $(BUILD_PATH) $(DEPEND)
 $(DEPEND): $(BUILD_PATH)/%.d: $(SRC_PATH)/%.asm | $(BUILD_PATH)
 	$(DEPEND_MSG)
 	@$(MKASMDEP) $(MKASMDEP_FLAGS) -o $@ $(patsubst %.d,%.o,$@) $<
+
+violet:
+	@make -C ..
 
 # ------------------------------------------------------------------------------
 # Path rules
