@@ -45,6 +45,28 @@ XREF_GetSceneEvent:
 	movea.l	(a0,d0.w),a0
 	cmpa.w	#0,a0						; Check if it's defined
 	rts
+	
+; ------------------------------------------------------------------------------
+; Set scene
+; ------------------------------------------------------------------------------
+; PARAMETERS:
+;	d0.w - Scene ID
+; ------------------------------------------------------------------------------
+
+	xdef SetScene
+SetScene:
+	movem.w	d0-d1,-(sp)					; Save registers
+	
+	add.w	d0,d0						; Multiply ID by index size
+	add.w	d0,d0
+	move.w	d0,d1
+	lsl.w	#3,d0
+	add.w	d1,d0
+	
+	move.w	d0,next_scene					; Set next scene
+	
+	movem.w	(sp)+,d0-d1					; Restore registers
+	rts
 
 ; ------------------------------------------------------------------------------
 ; Main
