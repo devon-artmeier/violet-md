@@ -14,17 +14,27 @@
 ; PERFORMANCE OF THIS SOFTWARE.
 ; ------------------------------------------------------------------------------
 
+	include	"shared.inc"
+	
+	section code
+
 ; ------------------------------------------------------------------------------
-; Memory map and variables
+; Decompress Kosinski compressed data
+; ------------------------------------------------------------------------------
+; Format details: https://segaretro.org/Kosinski_compression
+; ------------------------------------------------------------------------------
+; PARAMETERS:
+;	a0.l - Pointer to source data
+;	a1.l - Pointer to destination buffer
+; ------------------------------------------------------------------------------
+; RETURNS:
+;	a0.l - Pointer to end of source data
+;	a1.l - Pointer to end of destination buffer
 ; ------------------------------------------------------------------------------
 
-	rsset WORK_RAM+$E000
-scene			rs.w 1					; Current scene
-next_scene		rs.w 1					; Next scene
-
-vsync_flag		rs.b 1					; VSync flag
-
-			rs.b (WORK_RAM_END-$1FF)-__RS		; Stack space
-stack			rs.b 0					; Stack base
+	xdef KosDec
+KosDec:
+	include	"kosinski_internal.inc"
+	rts
 
 ; ------------------------------------------------------------------------------
