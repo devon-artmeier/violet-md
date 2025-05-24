@@ -157,7 +157,7 @@ SetVBlankEvents:
 	move.l	0+6(sp),vblank_lag
 
 	move.w	(sp)+,sr					; Restore interrupt settings
-	move.l	(sp),$C(sp)					; Deallocate stack frame and exit
+	move.l	(sp),$C(sp)					; Deallocate stack frame
 	lea	$C(sp),sp
 	rts
 
@@ -176,7 +176,7 @@ SetVBlankStartEvent:
 	move.l	0+6(sp),vblank_start				; Set start event
 
 	move.w	(sp)+,sr					; Restore interrupt settings
-	move.l	(sp),4(sp)					; Deallocate stack frame and exit
+	move.l	(sp),4(sp)					; Deallocate stack frame
 	addq.w	#4,sp
 	rts
 
@@ -195,7 +195,7 @@ SetVBlankEndEvent:
 	move.l	0+6(sp),vblank_end				; Set end event
 
 	move.w	(sp)+,sr					; Restore interrupt settings
-	move.l	(sp),4(sp)					; Deallocate stack frame and exit
+	move.l	(sp),4(sp)					; Deallocate stack frame
 	addq.w	#4,sp
 	rts
 
@@ -214,7 +214,7 @@ SetVBlankLagEvent:
 	move.l	0+6(sp),vblank_lag				; Set lag event
 
 	move.w	(sp)+,sr					; Restore interrupt settings
-	move.l	(sp),4(sp)					; Deallocate stack frame and exit
+	move.l	(sp),4(sp)					; Deallocate stack frame
 	addq.w	#4,sp
 	rts
 

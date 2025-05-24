@@ -27,17 +27,17 @@
 
 	xdef SetScene
 SetScene:
-	movem.w	d0-d1,-(sp)					; Save registers
+	movem.l	d0-d1,-(sp)					; Save registers
 
-	move.w	0+8(sp),d0					; Set scene
+	move.w	0+$C(sp),d0					; Set scene
 	move.w	d0,d1
 	add.w	d0,d0
 	add.w	d1,d0
 	lsl.w	#3,d0
 	move.w	d0,next_scene
 	
-	movem.w	(sp)+,d0-d1					; Restore registers
-	move.l	(sp),2(sp)					; Deallocate stack frame and exit
+	movem.l	(sp)+,d0-d1					; Restore registers
+	move.l	(sp),2(sp)					; Deallocate stack frame
 	addq.w	#2,sp
 	rts
 
