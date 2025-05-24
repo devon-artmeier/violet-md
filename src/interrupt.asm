@@ -45,6 +45,16 @@ VioletMdVBlank:
 	beq.s	.Lag						; If so, branch
 	clr.b	vsync_flag					; Clear VSync flag
 
+	move.l	$3E(sp),d0					; Did we interrupt a background task?
+	cmpi.l	#XREF_BgTasksStart,d0
+	bcs.s	.NoBgTasks					; If not, branch
+	cmpi.l	#XREF_BgTasksEnd,d0
+	bcc.s	.NoBgTasks					; If not, branch
+
+	move.l	d0,bg_tasks_bookmark				; Prepare background task bookmark
+	move.l	#.SetBgTaskBookmark,$3E(sp)
+
+.NoBgTasks:
 	movea.l	vblank_start,a0					; Run V-BLANK interrupt start event
 	bsr.s	RunVBlankEvent
 
@@ -65,19 +75,40 @@ VioletMdVBlank:
 
 	movem.l	(sp)+,d0-a6					; Restore registers
 	rte
-	
+
+; ------------------------------------------------------------------------------
+
+.SetBgTaskBookmark:
+	move.w	sr,bg_tasks_sr					; Save registers
+	movem.l	d0-a6,bg_tasks_regs
+	rts
+
+; ------------------------------------------------------------------------------
+; Start VSync
+; ------------------------------------------------------------------------------
+
+	xdef StartVSync
+StartVSync:
+	move.w	#$2000,sr					; Enable interrupts
+	st.b	vsync_flag					; Set VSync flag
+	rts
+
 ; ------------------------------------------------------------------------------
 ; VSync
 ; ------------------------------------------------------------------------------
 
 	xdef VSync
 VSync:
-	move.w	#$2000,sr					; Enable V-BLANK interrupt
-	st.b	vsync_flag					; Set VSync flag
+	bsr.s	StartVSync					; Start VSync
 
-.Wait:
+; ------------------------------------------------------------------------------
+; Wait for VSync
+; ------------------------------------------------------------------------------
+
+	xdef WaitVSync
+WaitVSync:
 	tst.b	vsync_flag					; Has the V-BLANK interrupt run yet?
-	bne.s	.Wait						; If not, wait
+	bne.s	WaitVSync					; If not, wait
 	rts
 
 ; ------------------------------------------------------------------------------

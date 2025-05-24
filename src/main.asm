@@ -71,6 +71,8 @@ RunSceneEvent:
 ; ------------------------------------------------------------------------------
 
 	xdef XREF_MainStart
+	xdef XREF_BgTasksStart
+	xdef XREF_BgTasksEnd
 Main:
 	move.w	scene,d0					; Has the scene changed?
 	cmp.w	next_scene,d0
@@ -85,8 +87,27 @@ XREF_MainStart:
 	moveq	#0,d0						; Run scene enter event
 	bsr.s	RunSceneEvent
 
+; ------------------------------------------------------------------------------
+
 UpdateScene:
-	bsr.w	VSync						; VSync
+	bsr.w	StartVSync					; Start VSync
+
+	move.l	bg_tasks_bookmark,d0				; Get background task bookmark
+	beq.s	XREF_BgTasksStart				; If it's not set, branch
+	clr.l	bg_tasks_bookmark				; Reset bookmark address
+
+	move.l	d0,-(sp)					; Restore bookmark
+	move.w	bg_tasks_sr,-(sp)
+	movem.l	bg_tasks_regs,d0-a6
+	rte
+
+XREF_BgTasksStart:
+	; TODO: Do background tasks here
+
+XREF_BgTasksEnd:
+	bsr.w	WaitVSync					; Wait for VSync (if background tasks were not interrupted)
+
+; ------------------------------------------------------------------------------
 
 	moveq	#8,d0						; Run scene update start event
 	bsr.s	RunSceneEvent
@@ -96,6 +117,8 @@ UpdateScene:
 	moveq	#$C,d0						; Run scene update end event
 	bsr.s	RunSceneEvent
 	
+; ------------------------------------------------------------------------------
+
 	; TODO: Initialize drawing here
 
 	moveq	#$10,d0						; Run scene draw start event
@@ -107,7 +130,9 @@ UpdateScene:
 	bsr.s	RunSceneEvent
 	
 	; TODO: Finish drawing here
-	
+
+; ------------------------------------------------------------------------------
+
 	bra.s	Main						; Loop
 
 ; ------------------------------------------------------------------------------
