@@ -21,8 +21,6 @@
 ; ------------------------------------------------------------------------------
 ; Decompress Kosinski compressed data
 ; ------------------------------------------------------------------------------
-; Format details: https://segaretro.org/Kosinski_compression
-; ------------------------------------------------------------------------------
 ; PARAMETERS:
 ;	0(sp).l - Destination buffer address
 ;	4(sp).l - Source data address
@@ -43,8 +41,6 @@ DecompKosinski:
 
 ; ------------------------------------------------------------------------------
 ; Decompress Kosinski compressed data (extended parameters)
-; ------------------------------------------------------------------------------
-; Format details: https://segaretro.org/Kosinski_compression
 ; ------------------------------------------------------------------------------
 ; PARAMETERS:
 ;	0(sp).l - End addresses buffer address
