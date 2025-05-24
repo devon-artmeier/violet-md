@@ -23,7 +23,7 @@
 ; ------------------------------------------------------------------------------
 
 	dc.l	0						; Stack pointer
-	dc.l	VioletMdReset					; Entry point
+	dc.l	VioletMdReset					; Reset
 	dc.l	BusError					; Bus error
 	dc.l	AddressError					; Address error
 	dc.l	IllegalInstr					; Illegal instruction

@@ -22,6 +22,9 @@
 scene			rs.w 1					; Current scene
 next_scene		rs.w 1					; Next scene
 
+vblank_start		rs.l 1					; V-BLANK interrupt start event
+vblank_end		rs.l 1					; V-BLANK interrupt end event
+vblank_lag		rs.l 1					; V-BLANK interrupt lag event
 vsync_flag		rs.b 1					; VSync flag
 
 			rs.b (WORK_RAM_END-$1FF)-__RS		; Stack space

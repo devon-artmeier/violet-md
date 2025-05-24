@@ -24,17 +24,21 @@
 ; Format details: https://segaretro.org/Kosinski_compression
 ; ------------------------------------------------------------------------------
 ; PARAMETERS:
-;	a0.l - Pointer to source data
-;	a1.l - Pointer to destination buffer
-; ------------------------------------------------------------------------------
-; RETURNS:
-;	a0.l - Pointer to end of source data
-;	a1.l - Pointer to end of destination buffer
+;	0(sp).l - Destination buffer address
+;	4(sp).l - Source data address
 ; ------------------------------------------------------------------------------
 
 	xdef KosDec
 KosDec:
+	movem.l	a0-a1,-(sp)					; Save registers
+
+	movea.l	4+12(sp),a0					; Decompress data
+	movea.l	0+12(sp),a1
 	include	"kosinski_internal.inc"
+
+	movem.l	(sp)+,a0-a1					; Restore registers
+	move.l	(sp),8(sp)					; Deallocate stack frame and exit
+	addq.w	#8,sp
 	rts
 
 ; ------------------------------------------------------------------------------

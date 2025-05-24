@@ -20,12 +20,12 @@
 ; Format details: https://segaretro.org/Kosinski_compression
 ; ------------------------------------------------------------------------------
 ; PARAMETERS:
-;	a0.l - Pointer to source data
-;	a1.l - Pointer to destination buffer
+;	a0.l - Source data address
+;	a1.l - Destination buffer address
 ; ------------------------------------------------------------------------------
 ; RETURNS:
-;	a0.l - Pointer to end of source data
-;	a1.l - Pointer to end of destination buffer
+;	a0.l - Source data end address
+;	a1.l - Destination buffer end address
 ; ------------------------------------------------------------------------------
 
 	movem.l	d0-d3/a2,-(sp)					; Save registers

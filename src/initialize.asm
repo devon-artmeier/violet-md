@@ -24,7 +24,7 @@
 
 	xdef VioletMdReset
 VioletMdReset:
-	move	#$2700,sr					; Disable interrupts
+	move.w	#$2700,sr					; Disable interrupts
 
 	lea	.Addresses(pc),a0				; Get addresses
 	movem.l	(a0)+,a1-a6
